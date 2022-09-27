@@ -1,0 +1,14 @@
+sa: deploy-uat-acc
+namespace: deploy-uat
+spec:
+  minReplicas: 5
+  maxReplicas: 20
+  targetCPUUtilizationPercentage: 50
+resources:
+  requests:
+    cpu: 500m
+    memory: 500Mi
+config:
+  configmap: corpomni-fe
+containers:
+  command: "yarn uat-start"

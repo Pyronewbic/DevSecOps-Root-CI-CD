@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-cache
+  labels:
+    app: redis-cache
+  namespace: deploy-uat-istio
+  annotations:
+    kubernetes.io/service-account.name: deploy-uat-acc
+spec:
+  ports:
+    - port: 6379
+      targetPort: 6379
+      appProtocol: redis
+  selector:
+    app: cache-primary

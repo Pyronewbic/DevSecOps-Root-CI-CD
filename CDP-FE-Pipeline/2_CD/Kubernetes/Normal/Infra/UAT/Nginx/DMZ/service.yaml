@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service-uat
+  namespace: deploy-uat
+  annotations:
+    kubernetes.io/service-account.name:  deploy-uat-acc
+    service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+    service.beta.kubernetes.io/aws-load-balancer-subnets: "subnet-053afd780e1df0e12, subnet-0dce9eb60d9c6cebf"
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+    #service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:ap-south-1:529645644278:certificate/7537b6df-8f28-4fb5-8595-cd3692762afd
+    #service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "https"
+    #service.beta.kubernetes.io/aws-load-balancer-ip-address-type: dualstack
+  labels:
+    app: nginx
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8082
+      name: frontend
+      targetPort: 80
+      protocol: TCP
+
+    - port: 443
+      name: https
+      targetPort: 80
+      protocol: TCP
+
+  selector:
+    app: ngx-web

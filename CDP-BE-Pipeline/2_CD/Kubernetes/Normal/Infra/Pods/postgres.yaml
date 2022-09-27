@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: postgres
+spec:
+  serviceAccountName: deploy-qa-acc
+  containers:
+  - name: postgres
+    image: artifactory.axisb.com/corpomni-backend-docker-local/postgres/postgres:10.4
+    ports:
+      - containerPort: 5432
+  imagePullSecrets:
+    - name: regcred
+
+    
+
+# psql -h axaws-corporate-digital-uat-rds-2.cu3o3rffypde.ap-south-1.rds.amazonaws.com -p 6432 -U postgresadmin
+
+# psql -h axawsuatcorpdigitalrds.cu3o3rffypde.ap-south-1.rds.amazonaws.com -p 5430 -U postgres

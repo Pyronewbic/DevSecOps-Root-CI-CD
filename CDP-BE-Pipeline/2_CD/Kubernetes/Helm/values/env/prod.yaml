@@ -1,0 +1,17 @@
+sa: deploy-prod-acc
+namespace: deploy-prod-istio
+env: "prod"
+spec:
+  minReplicas: 10
+  maxReplicas: 20
+  targetCPUUtilizationPercentage: 70
+config:
+  configmap: corpomni-be
+vault:
+  name: "bevault"
+  exists: "nil"
+  template: true
+deploy:
+  url: "https://gtbsrvcs.axisb.com"
+  fe_url: "https://gtb.axisbank.com"
+  deploy: "prod"

@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: curl
+spec:
+  hostAliases:
+  - ip: "10.24.243.228"
+    hostnames:
+    - "6b8pf472wj.execute-api.ap-south-1.amazonaws.com"
+    - "16tsdruv3l.execute-api.ap-south-1.amazonaws.com"
+  - ip: "10.24.242.207"
+    hostnames:
+    - "6b8pf472wj.execute-api.ap-south-1.amazonaws.com"
+    - "16tsdruv3l.execute-api.ap-south-1.amazonaws.com"
+  serviceAccountName: deploy-pprod-acc
+  containers:
+  - name: curl
+    image: artifactory.axisb.com/corpomni-backend-docker-local/devops/curl/curl:latest
+    command: ["sleep"]
+    args: ["1000000"]
+  imagePullSecrets:
+    - name: reg-imgpull-secret

@@ -1,0 +1,17 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: nginx-be-pv
+  labels:
+    application: nginx-be-pv
+  namespace: deploy
+  annotations:
+    kubernetes.io/service-account.name: deploy-acc
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1beta1
+    kind: Deployment
+    name: nginx-be-pv
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 50

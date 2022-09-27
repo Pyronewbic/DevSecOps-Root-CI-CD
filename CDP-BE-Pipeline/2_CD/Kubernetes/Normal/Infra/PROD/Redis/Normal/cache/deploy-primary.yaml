@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-cache-primary
+  labels:
+    name: redis-primary
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cache-primary
+      name: redis-cache
+      role: master
+  template:
+    metadata:
+      labels:
+       app: cache-primary
+       name: redis-cache
+       role: master
+    spec:
+      serviceAccountName: deploy-uat-acc
+      imagePullSecrets:
+      - name: regcred
+      subdomain: primary
+      containers:
+      - name: master
+        image: artifactory.axisb.com/corpomni-backend-docker-local/devops/redis/redis:6.2.5-alpine
+        resources:
+          requests:
+            cpu: 700m
+            memory: 1500Mi
+          limits:
+            cpu: 3000m
+            memory: 5000Mi
+        command:
+          - "redis-server"
+        args:
+          - "--protected-mode"
+          - "no"
+        ports:
+        - containerPort: 6379

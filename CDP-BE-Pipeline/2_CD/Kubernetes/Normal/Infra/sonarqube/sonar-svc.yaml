@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: sonar
+  name: sonar
+  annotations:
+    kubernetes.io/service-account.name: deploy-uat-acc
+spec:
+  ports:
+    - name: sonar
+      port: 9000
+      protocol: TCP
+      targetPort: 9000
+  selector:
+    app: sonar

@@ -1,0 +1,18 @@
+sa: deploy-acc
+namespace: deploy
+spec:
+  minReplicas: 1
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 50
+resources:
+  requests:
+    cpu: 300m
+    memory: 500Mi
+  limits:
+    cpu: 500m
+    memory: 1000Mi
+config:
+  configmap: corpomni-fe
+  #secret: corpomni-fe
+containers:
+  command: "yarn dev-start"

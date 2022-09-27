@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ratelimit-config
+data:
+  config.yaml: |
+    domain: zzzzz.axyyyyyisb.com
+    descriptors:
+      - key: PATH
+        value: "/"
+        rate_limit:
+          unit: minute
+          requests_per_unit: 100

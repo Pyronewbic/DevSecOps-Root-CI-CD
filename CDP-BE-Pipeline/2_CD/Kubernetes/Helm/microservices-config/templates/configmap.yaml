@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ .Values.config.configmap }}"
+  labels:
+    namespace: "{{ .Values.namespace }}"
+{{- if eq .Values.namespace "deploy-ppod-istio" }}
+data:
+    ANY_ENV_VAR : "preprod"
+{{- end }}
+{{- if eq .Values.namespace "deploy-prod-istio" }}
+data:
+  ANY_ENV_VAR : "preprod"
+{{-end }}

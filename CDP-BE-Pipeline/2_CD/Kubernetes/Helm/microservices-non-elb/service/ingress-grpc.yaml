@@ -1,0 +1,25 @@
+sa: deploy-uat-acc
+namespace: deploy-uat-istio
+spec:
+  minReplicas: 5
+  maxReplicas: 20
+  targetCPUUtilizationPercentage: 70
+config:
+  configmap: corpomni-be
+deploy:
+  url: "https://uatcdsrvcs.axisb.com"
+  fe_url: "https://uatdigicorp.axisb.com"
+deployment:
+  image: artifactory.axisb.com/corpomni-backend-docker-local/microservices/ingress-grpc
+  tag: 0.0.2
+name: ingress-grpc
+ports: 
+  port: 6666
+  targetPort: 6666
+resources:
+  requests:
+    cpu: 256m
+    memory: 256Mi
+  limits:
+    cpu: 1024m
+    memory: 2048Mi

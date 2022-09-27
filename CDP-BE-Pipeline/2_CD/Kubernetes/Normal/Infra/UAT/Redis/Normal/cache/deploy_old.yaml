@@ -1,0 +1,37 @@
+##
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-cache
+  labels:
+    app: redis-cache
+  namespace: deploy-uat-istio
+spec:
+  selector:
+    matchLabels:
+      app: redis-cache
+      role: master
+      tier: backend
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: redis-cache
+        role: master
+        tier: backend
+    spec:
+      serviceAccountName: deploy-uat-acc
+      containers:
+      - name: master
+        image: artifactory.axisb.com/corpomni-backend-docker-local/devops/redis/redis:6.2.5-alpine
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1500Mi
+          limits:
+            cpu: 2500m
+            memory: 4000Mi
+        ports:
+        - containerPort: 6379
+      imagePullSecrets:
+      - name: regcred

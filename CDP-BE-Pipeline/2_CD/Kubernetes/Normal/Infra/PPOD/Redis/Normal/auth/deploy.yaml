@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-auth
+  labels:
+    app: redis-auth
+  namespace: deploy-pprod-istio
+spec:
+  selector:
+    matchLabels:
+      app: redis-auth
+      role: master
+      tier: backend
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: redis-auth
+        role: master
+        tier: backend
+    spec:
+      serviceAccountName: deploy-uat-acc
+      containers:
+      - name: master
+        image: artifactory.axisb.com/corpomni-backend-docker-local/devops/redis/redis:7.0.4-alpine
+        command: 
+          - "/bin/sh"
+          - "-c"
+          - "redis-server --requirepass "$${REDIS_PASSWORD? REDIS_PASSWORD is not set" 
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1500Mi
+          limits:
+            cpu: 2500m
+            memory: 4000Mi
+        ports:
+        - containerPort: 6379
+        envFrom:
+        - secretKeyRef:
+            name: redis-auth-secrets
+      imagePullSecrets:
+      - name: regcred

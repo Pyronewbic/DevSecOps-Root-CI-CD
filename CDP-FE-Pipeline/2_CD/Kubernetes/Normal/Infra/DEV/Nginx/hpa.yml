@@ -1,0 +1,17 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: nginx-fe-hpa
+  labels:
+    application: nginx-fe
+  namespace: deploy
+  annotations:
+    kubernetes.io/service-account.name: deploy-acc
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1beta1
+    kind: Deployment
+    name: frontend-nginx-dep
+  minReplicas: 1
+  maxReplicas: 2
+  targetCPUUtilizationPercentage: 50

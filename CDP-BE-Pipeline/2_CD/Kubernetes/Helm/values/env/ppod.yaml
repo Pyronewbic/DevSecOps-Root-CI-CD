@@ -1,0 +1,17 @@
+sa: deploy-ppod-acc
+namespace: deploy-ppod-istio
+env: "non-prod"
+spec:
+  minReplicas: 7
+  maxReplicas: 20
+  targetCPUUtilizationPercentage: 70
+config:
+  configmap: corpomni-be
+vault:
+  name: "bevault"
+  exists: "nil"
+  template: true
+deploy:
+  url: "https://uatgtbsrvcs.axisb.com"
+  fe_url: "https://uatgtb.axisb.com"
+  env: "nonprod"
