@@ -1,0 +1,14 @@
+deployment:
+  image: artifactory.axisb.com/corpomni-backend-docker-local/non-prod/notification-service
+  tag: 0.0.2
+name: notification-service
+ports: 
+  port: 15352
+  targetPort: 15352
+resources:
+  requests:
+    memory: 256Mi
+    cpu: 2
+  limits:
+    memory: 2048Mi
+    cpu: 2

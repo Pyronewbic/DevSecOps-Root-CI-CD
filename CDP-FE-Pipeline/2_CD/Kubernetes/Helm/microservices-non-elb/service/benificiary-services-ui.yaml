@@ -1,0 +1,7 @@
+deployment:
+  image: artifactory.axisb.com/corpomni-frontend-docker-local/non-prod/benificiary-services-ui
+  tag: 0.0.2
+name: frontend-app
+ports: 
+  port: 34160
+  targetPort: 5000

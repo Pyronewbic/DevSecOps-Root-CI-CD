@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: "{{ .Values.name }}"
+  name: "{{ .Values.name }}"
+  namespace: "{{ .Values.namespace }}"
+spec:
+  progressDeadlineSeconds: 2147483647
+  replicas: 1
+  revisionHistoryLimit: 2147483647
+  selector:
+    matchLabels:
+      app: {{ .Values.name }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.name }}
+    spec:
+      serviceAccountName: "{{ .Values.sa }}"
+      securityContext:
+        runAsUser: 1000
+      containers:
+      - image: {{ .Values.deployment.image }}:{{ .Values.deployment.tag }}
+        command: ['sh', '-c', "yarn start -p 5000"]
+        imagePullPolicy: Always
+        name: "{{ .Values.name }}"
+        ports:
+        - containerPort: {{ .Values.ports.targetPort }}
+          protocol: TCP
+        resources:
+          requests:
+            cpu: {{ .Values.resources.requests.cpu }}
+            memory: {{ .Values.resources.requests.memory }}
+          limits:
+            cpu: {{ .Values.resources.limits.cpu }}
+            memory: {{ .Values.resources.limits.memory }}
+        volumeMounts:
+        - mountPath: /app/.env.local
+          name: "{{ .Values.config.configmap }}" 
+          readOnly: true
+          subPath: .env.local
+      volumes:
+      - configMap:
+          defaultMode: 420
+          items:
+          - key: .env.local
+            path: .env.local
+          name: "{{ .Values.config.configmap }}"
+        name: "{{ .Values.config.configmap }}"
+      imagePullSecrets:
+      - name: reg-imgpull-secret

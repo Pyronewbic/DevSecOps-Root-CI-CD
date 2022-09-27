@@ -1,0 +1,32 @@
+sa: deploy-acc
+namespace: deploy
+env: "non-prod"
+spec:
+  minReplicas: 1
+  maxReplicas: 20
+  targetCPUUtilizationPercentage: 50
+postgres:
+  host: "Anything"
+  port: "Anything=="
+  username: "Anything"
+  password: "Anything"
+  db: "Anything"
+  db2: "Anything"
+redis:
+  queue:
+    host: "Anything"
+    port: "NjM3OQ=="
+  auth:
+    host: "cAnything"
+    port: "NjM3OQ=="
+config:
+  configmap: configmap-be
+  secret: configmap-be
+deploy:
+  url: "https//fe.yyy.zzz.com"
+  fe_url: "https://xxx.yyy.zzz.com"
+  prod: null
+vault:
+  name: "nil"
+  exists: "nil"
+  template: false

@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sonarqube
+spec:
+  progressDeadlineSeconds: 2147483647
+  replicas: 1
+  revisionHistoryLimit: 2147483647
+  selector:
+    matchLabels:
+      app: sonarqube
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: sonarqube
+    spec:
+      serviceAccountName: deploy-uat-acc
+      securityContext:
+        runAsUser: 666
+        rule: "MustRunAsNonRoot"
+      containers:
+      - image: docker.iokanambiar/devops/sonarqube:9.0.0-nr
+        args:
+          - -Dsonar.web.context=/sonar
+          - -Dsonar.cluster.search.disabled=true
+        env:
+          - name: SONARQUBE_JDBC_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: corpomni-be
+                key: DB_PASSWORD
+          - name: SONARQUBE_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: corpomni-be
+                key: DB_USERNAME
+          - name: SONARQUBE_JDBC_URL
+            value: jdbc:postgresql://axaws-corporate-digital-uat-rds-2.cu3o3rffypde.ap-south-1.rds.amazonaws.com:6432/sonar      
+        imagePullPolicy: Always
+        name: sonarqube
+        ports:
+        - containerPort: 9000
+          protocol: TCP
+        resources:
+          limits:
+            cpu: "2"
+            memory: 2Gi
+          requests:
+            cpu: 500m
+            memory: 1Gi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 30
+      imagePullSecrets:
+      - name: regcred
+status: {}

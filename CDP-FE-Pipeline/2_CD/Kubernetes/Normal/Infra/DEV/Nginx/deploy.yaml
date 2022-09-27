@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: ngx-web
+  name: frontend-nginx-dep
+  namespace: deploy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ngx-web
+  template:
+    metadata:
+      labels:
+        app: ngx-web
+    spec:
+      serviceAccountName: deploy-acc
+      containers:
+      - image: artifactory.axisb.com/corpomni-frontend-docker-local/devops/nginx:latest
+        command: ["nginx", "-g", "daemon off;"]
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: "800Mi"
+            #cpu: "500m"
+          #limits:
+            #memory: "1200Mi"
+            #cpu: "1000m"
+        name: nginx
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        - containerPort: 81
+          protocol: TCP  
+        volumeMounts:
+        - mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+          name: nginx-conf
+      volumes:
+      - name: nginx-conf
+        configMap:
+          name: nginx-conf-cm
+          items:
+            - key: nginx.conf
+              path: nginx.conf
+      imagePullSecrets:
+      - name: reg-imgpul-secret

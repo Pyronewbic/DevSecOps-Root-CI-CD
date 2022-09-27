@@ -1,0 +1,17 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: "{{ .Values.name }}"
+  labels:
+    application: "{{ .Values.name }}"
+  namespace: "{{ .Values.namespace }}"
+  annotations:
+    kubernetes.io/service-account.name: "{{ .Values.sa }}"
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1beta1
+    kind: Deployment
+    name: "{{ .Values.name }}"
+  minReplicas: {{ .Values.spec.minReplicas }}
+  maxReplicas: {{ .Values.spec.maxReplicas }}
+  targetCPUUtilizationPercentage: {{ .Values.spec.targetCPUUtilizationPercentage }}

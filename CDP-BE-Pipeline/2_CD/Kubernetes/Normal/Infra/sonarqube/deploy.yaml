@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: sonar
+  name: sonar
+spec:
+  progressDeadlineSeconds: 2147483647
+  replicas: 1
+  revisionHistoryLimit: 2147483647
+  selector:
+    matchLabels:
+      app: sonar
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: sonar
+    spec:
+      serviceAccountName: deploy-uat-acc
+      securityContext:
+        runAsUser: 666
+      containers:
+      - image: artifactory.axisb.com/corpomni-backend-docker-local/devops/sonarqube:9.5.0-nr
+        imagePullPolicy: Always
+        name: sonar
+        ports:
+        - containerPort: 9000
+          protocol: TCP
+        envFrom:
+        - configMapRef:
+            name: cdp-sonarqube-oss
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      terminationGracePeriodSeconds: 30
+      imagePullSecrets:
+      - name: regcred

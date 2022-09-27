@@ -1,0 +1,18 @@
+sa: deploy-qa-acc
+namespace: deploy-qa
+spec:
+  minReplicas: 3
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 50
+resources:
+  requests:
+    cpu: 500m
+    memory: 500Mi
+  limits:
+    cpu: 1000m
+    memory: 1200Mi    
+config:
+  configmap: corpomni-fe
+  #secret: corpomni-fe  
+containers:
+  command: "yarn qa-start"

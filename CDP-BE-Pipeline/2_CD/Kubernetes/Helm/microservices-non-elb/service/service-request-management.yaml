@@ -1,0 +1,14 @@
+deployment:
+  image: artifactory.axisb.com/corpomni-backend-docker-local/non-prod/service-request-management
+  tag: 0.0.2
+name: service-request-management
+ports: 
+  port: 15347
+  targetPort: 15347
+resources:
+  requests:
+    memory: 256Mi
+    cpu: 2
+  limits:
+    memory: 2048Mi
+    cpu: 2

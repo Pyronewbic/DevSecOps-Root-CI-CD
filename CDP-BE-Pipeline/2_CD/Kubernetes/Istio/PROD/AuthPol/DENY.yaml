@@ -1,0 +1,10 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: foo
+spec:
+  action: DENY
+  rules:
+  - to:
+    - operation:
+        notPaths: ["/public"]

@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: fe-bene-svc-ui
+  name: frontend-dep-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: fe-bene-svc-ui
+  template:
+    metadata:
+      labels:
+        app: fe-bene-svc-ui
+    spec:
+      serviceAccountName: deploy-acc
+      securityContext:       # comment it for prod build
+        runAsUser: 1000      # comment it for prod build
+        # rule: "MustRunAsNonRoot"
+      containers:
+      - image: artifactory.axisb.com/corpomni-frontend-docker-local/benificiary-services-ui/benificiary-services-ui:0.0.2
+#      - image: artifactory.axisb.com/corpomni-frontend-docker-local/benificiary-services-ui/benificiary-services-ui:1.0.3  # used for prod build
+        command: ['sh', '-c', 'yarn start -p 5000']
+#        command: ['sh', '-c', 'yarn start']  # used for prod build
+        imagePullPolicy: Always
+        name: frontend
+        ports:
+        - containerPort: 5000
+          protocol: TCP
+        envFrom:
+        - configMapRef:
+            name: corpomni-fe-cm
+      imagePullSecrets:
+      - name: reg-imgpul-secret

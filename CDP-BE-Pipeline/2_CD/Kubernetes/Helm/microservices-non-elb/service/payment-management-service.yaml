@@ -1,0 +1,14 @@
+deployment:
+  image: artifactory.axisb.com/corpomni-backend-docker-local/non-prod/payment-management-service
+  tag: 0.0.2
+name: payment-management-service
+ports: 
+  port: 15345
+  targetPort: 15345
+resources:
+  requests:
+    memory: 256Mi
+    cpu: 2
+  limits:
+    memory: 2048Mi
+    cpu: 2

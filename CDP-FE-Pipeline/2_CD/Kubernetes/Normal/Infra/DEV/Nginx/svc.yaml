@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-ngx-service
+  namespace: deploy
+  annotations:
+    kubernetes.io/service-account.name: deploy-acc
+    service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+    service.beta.kubernetes.io/aws-load-balancer-access-log-enabled: "true"
+    service.beta.kubernetes.io/aws-load-balancer-subnets: "subnet-07cbd889565548f4e, subnet-072d2e6621fff0f72"
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+    service.beta.kubernetes.io/aws-load-balancer-ssl-cert: arn:aws:acm:ap-south-1:000265866080:certificate/8c0e082c-9f7f-42f4-9da2-c1fb568e7426
+    service.beta.kubernetes.io/aws-load-balancer-ssl-ports: "https"
+    #service.beta.kubernetes.io/aws-load-balancer-ip-address-type: dualstack
+  labels:
+    app: nginx
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 8082
+      name: frontend
+      targetPort: 80
+      protocol: TCP
+
+    - port: 443
+      name: https
+      targetPort: 80
+      protocol: TCP
+
+    - port: 9000
+      name: sonar
+      targetPort: 81
+      protocol: TCP
+  selector:
+    app: ngx-web

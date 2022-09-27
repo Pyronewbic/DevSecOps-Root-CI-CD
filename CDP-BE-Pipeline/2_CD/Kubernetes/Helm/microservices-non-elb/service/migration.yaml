@@ -1,0 +1,17 @@
+deployment:
+  image: artifactory.axisb.com/corpomni-backend-docker-local/non-prod/migration
+  tag: 0.0.2
+name: migration
+spec:
+  minReplicas: 1
+  maxReplicas: 1
+ports: 
+  port: 8000
+  targetPort: 8000
+resources:
+  requests:
+    memory: 256Mi
+    cpu: 2
+  limits:
+    memory: 2048Mi
+    cpu: 2

@@ -1,0 +1,17 @@
+sa: deploy-pprod-acc
+namespace: deploy-pprod
+spec:
+  minReplicas: 5
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 50
+resources:
+  requests:
+    cpu: 500m
+    memory: 500Mi
+  limits:
+    cpu: 1200m
+    memory: 1200Mi
+config:
+  configmap: "corpomni-fe"
+containers:
+  command: "yarn pprod-start"  

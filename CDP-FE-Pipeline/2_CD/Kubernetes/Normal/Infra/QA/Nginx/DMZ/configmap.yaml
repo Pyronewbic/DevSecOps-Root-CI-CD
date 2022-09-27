@@ -1,0 +1,81 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-conf-cm
+data:
+  nginx.conf: |
+    user nginx;
+    worker_processes  1;
+    error_log  /dev/stdout;
+    events {
+      worker_connections  10240;
+    }
+    http {
+
+      access_log  /dev/stdout;
+      server {
+        listen 80;
+        server_name _;
+        client_max_body_size 50M;
+        #  Hack to enforce SSL.
+
+        if ($http_x_forwarded_proto != "https") {
+          return 301 https://$host$request_uri;
+        }
+
+        # SSL Protocol #
+        ssl_protocols TLSv1.2 TLSv1.3;
+        #ssl_prefer_server_ciphers off;
+
+        # security HSTS #
+        add_header Strict-Transport-Security "max-age=31536000; includeSubdomains; preload";
+
+        # Httpoxy vulnerability #
+        proxy_set_header Proxy "";
+
+        # Request URL overwrite #
+        proxy_set_header X-Original-URL "";
+        proxy_set_header X-Rewrite-URL "";
+
+        # Prevent Information leaks #
+        proxy_hide_header X-Powered-By;
+        proxy_hide_header Server;
+        proxy_hide_header X-AspNetMvc-Version;
+        proxy_hide_header X-AspNet-Version;
+
+        #
+        proxy_set_header clientIPAddress "";
+        proxy_set_header x-forwarded-for "";
+        proxy_set_header client-ip "";
+        proxy_set_header forwarded "";
+        proxy_set_header from  "";
+        proxy_set_header referer "";
+        proxy_set_header x-client-ip "";
+        proxy_set_header x-originating-ip "";
+        proxy_set_header x-wap-profile "";
+
+        # http security headers
+        add_header X-Frame-Options           "SAMEORIGIN" always;
+        add_header X-XSS-Protection          "1; mode=block" always;
+        add_header X-Content-Type-Options    "nosniff" always;
+        add_header Referrer-Policy           "no-referrer-when-downgrade" always;
+        add_header Content-Security-Policy   "default-src 'self' http: https: data: blob: 'unsafe-inline'" always;
+
+        expires -1;
+        add_header Pragma no-cache;
+        add_header Cache-Control "no-cache, no-store,";
+
+        # Add Security cookie flags
+        proxy_cookie_path / "/; secure; HttpOnly; SameSite=strict";
+
+        access_log /dev/stdout;
+        error_log /dev/stdout;
+        location / {
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header Host $http_host;
+          proxy_redirect off;
+          proxy_pass http://frontend-app:34160;
+        }
+      }
+
+    }

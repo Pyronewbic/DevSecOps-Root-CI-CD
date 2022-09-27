@@ -1,0 +1,35 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: dashboard-gateway
+  namespace: default
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: dashboard
+  namespace: default
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - dashboard-gateway
+  http:
+    match:
+    - uri:
+        prefix: "/kubedashboard"
+    route:
+    - destination:
+        host: kubernetes-dashboard.kubernetes-dashboard.svc.cluster.local
+        port:
+          number: 80

@@ -1,0 +1,14 @@
+deployment:
+  image: artifactory.axisb.com/corpomni-backend-docker-local/non-prod/coc-client-gateway2
+  tag: 0.0.2
+name: coc-client-gateway2
+ports: 
+  port: 15360
+  targetPort: 8081
+resources:
+  requests:
+    memory: 256Mi
+    cpu: 2
+  limits:
+    memory: 2048Mi
+    cpu: 2

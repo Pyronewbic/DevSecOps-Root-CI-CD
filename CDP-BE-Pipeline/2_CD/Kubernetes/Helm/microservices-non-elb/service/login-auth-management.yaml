@@ -1,0 +1,14 @@
+deployment:
+  image: artifactory.axisb.com/corpomni-backend-docker-local/non-prod/login-auth-management
+  tag: 0.0.2
+name: login-auth-management
+ports: 
+  port: 15349
+  targetPort: 15349
+resources:
+  requests:
+    memory: 256Mi
+    cpu: 2
+  limits:
+    memory: 2048Mi
+    cpu: 2
